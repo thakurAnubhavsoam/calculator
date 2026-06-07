@@ -1,0 +1,270 @@
+/* ── CSS VARIABLES ──────────────────────────────
+   Ek jagah colors define karo, sab jagah use karo.
+   Baad mein dark/light theme switch bhi easy hoga.
+─────────────────────────────────────────────── */
+
+:root {
+    --bg-start: #0f0c29;
+    /* Gradient background shuru */
+    --bg-end: #302b63;
+    /* Gradient background end */
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    /* Frosted glass effect */
+    --glass-border: rgba(255, 255, 255, 0.18);
+    --btn-bg: rgba(255, 255, 255, 0.10);
+    --btn-hover: rgba(255, 255, 255, 0.22);
+    --btn-op: rgba(99, 179, 237, 0.30);
+    /* Operator buttons */
+    --btn-eq: rgba(246, 135, 179, 0.80);
+    /* Equal button */
+    --btn-clear: rgba(252, 129, 74, 0.70);
+    /* Clear button */
+    --text: #ffffff;
+    --text-dim: rgba(255, 255, 255, 0.55);
+    --font: 'JetBrains Mono', monospace;
+    --radius: 16px;
+}
+
+
+/* ── RESET ───────────────────────────────────── */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ── BODY — Full screen centered layout ────────
+   min-height: 100vh = poori screen ki height
+   place-items: center = grid ka shorthand for
+     justify-content + align-items center
+─────────────────────────────────────────────── */
+
+body {
+    font-family: var(--font);
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    /* Center mein rakh do — horizontally + vertically */
+    background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+    /* Moving animated background spheres */
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* ── DECORATIVE BACKGROUND BLOBS ───────────────
+   ::before aur ::after — do fake elements jo
+   CSS se create hote hain. Background ke liye
+   glowing circles banaye hain.
+─────────────────────────────────────────────── */
+
+body::before,
+body::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    /* Circle shape */
+    filter: blur(80px);
+    /* Soft glow */
+    pointer-events: none;
+    /* Click-through */
+    animation: blobMove 8s ease-in-out infinite alternate;
+}
+
+body::before {
+    width: 400px;
+    height: 400px;
+    background: rgba(102, 126, 234, 0.35);
+    top: -100px;
+    left: -100px;
+}
+
+body::after {
+    width: 350px;
+    height: 350px;
+    background: rgba(240, 100, 180, 0.25);
+    bottom: -80px;
+    right: -80px;
+    animation-delay: -4s;
+    /* Opposite direction */
+}
+
+@keyframes blobMove {
+    from {
+        transform: translate(0, 0) scale(1);
+    }
+    to {
+        transform: translate(40px, 30px) scale(1.1);
+    }
+}
+
+
+/* ── CALCULATOR WRAPPER — Glass card ───────────
+   backdrop-filter: blur() = frosted glass effect
+   background semi-transparent + blur ke combination
+   se glass morphism look aata hai.
+─────────────────────────────────────────────── */
+
+.calc-wrap {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 28px;
+    width: 340px;
+    backdrop-filter: blur(24px);
+    /* Glass effect */
+    -webkit-backdrop-filter: blur(24px);
+    /* Safari */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    /* Inner highlight */
+    position: relative;
+    z-index: 1;
+}
+
+
+/* ── DISPLAY SCREEN ─────────────────────────── */
+
+.display {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius);
+    padding: 20px 18px 14px;
+    margin-bottom: 20px;
+    text-align: right;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+/* Expression (upar wali chhoti text — "12 + 5") */
+
+.display .expression {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    min-height: 20px;
+    word-break: break-all;
+    /* Long expressions wrap honge */
+    margin-bottom: 8px;
+}
+
+
+/* Result (bada number neeche) */
+
+.display .result {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--text);
+    word-break: break-all;
+    line-height: 1.1;
+    /* Font size shrinks karo agar number zyada lamba ho */
+    transition: font-size 0.15s ease;
+}
+
+
+/* ── BUTTON GRID ────────────────────────────────
+   CSS Grid se 4-column layout.
+   gap = rows aur columns dono ke beech space.
+─────────────────────────────────────────────── */
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 equal columns */
+    gap: 10px;
+}
+
+
+/* ── BASE BUTTON STYLE ──────────────────────── */
+
+.btn {
+    background: var(--btn-bg);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 1.15rem;
+    font-weight: 400;
+    height: 64px;
+    cursor: pointer;
+    transition: background 0.18s ease, transform 0.1s ease, box-shadow 0.18s;
+    user-select: none;
+    /* Click karte waqt text select na ho */
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* Hover effect */
+
+.btn:hover {
+    background: var(--btn-hover);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+
+/* Click/press effect — thoda neeche jaata hai */
+
+.btn:active {
+    transform: scale(0.94);
+}
+
+
+/* ── BUTTON VARIANTS ─────────────────────────── */
+
+
+/* Operator buttons (+, -, *, /) */
+
+.btn.op {
+    background: var(--btn-op);
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+
+/* Clear button (AC) */
+
+.btn.clear {
+    background: var(--btn-clear);
+    font-weight: 700;
+}
+
+
+/* Equal (=) button — spans 2 columns */
+
+.btn.eq {
+    grid-column: span 2;
+    /* 2 columns wide */
+    background: var(--btn-eq);
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+
+/* Zero button — spans 2 columns */
+
+.btn.zero {
+    grid-column: span 2;
+}
+
+
+/* Ripple effect on click — fancy touch */
+
+.btn .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(0);
+    animation: ripple 0.5s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
